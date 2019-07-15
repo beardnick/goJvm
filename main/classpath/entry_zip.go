@@ -21,8 +21,8 @@ func newZipEntry(path string) *ZipEntry  {
 	return &ZipEntry{absDir}
 }
 
-func (self *ZipEntry) readClass(className string)([]byte,Entry,error){
-	r, err := zip.OpenReader(self.absDir)
+func (this *ZipEntry) readClass(className string)([]byte,Entry,error){
+	r, err := zip.OpenReader(this.absDir)
 	if util.PanicError(err) {
 		return nil, nil, err
 	}
@@ -39,12 +39,12 @@ func (self *ZipEntry) readClass(className string)([]byte,Entry,error){
 			if util.PanicError(err){
 				return nil, nil, err
 			}
-			return data, self, nil
+			return data, this, nil
 		}
 	}
 	return nil,nil,errors.New("class not Found: " + className)
 }
 
-func (self *ZipEntry) String() string{
-	return self.absDir
+func (this *ZipEntry) String() string{
+	return this.absDir
 }
