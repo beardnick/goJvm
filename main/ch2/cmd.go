@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"goJvm/main/ch2/classpath"
 	"os"
+	"strings"
 )
 
 type Cmd struct {
@@ -39,4 +41,12 @@ func parseCmd() *Cmd {
 }
 
 func startJvm(cmd *Cmd) {
+	cp := classpath.Parse(cmd.Xjre, cmd.classPath)
+	fmt.Printf("classpath: %v class: %v args: %v\n",cp, cmd.class, cmd.args)
+	className := strings.Replace(cmd.class, ".", "/", -1)
+	classData, _, err := cp.ReadClass(className)
+	if err != nil{
+		fmt.Printf("Could not find or load main class %s\n", cmd.class)
+	}
+	fmt.Printf("class data:%v\n", classData)
 }

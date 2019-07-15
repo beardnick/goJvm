@@ -3,10 +3,10 @@ package classpath
 import (
 	"archive/zip"
 	"errors"
+	"goJvm/main/util"
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	"goJvm/main/util"
 )
 
 type ZipEntry struct {
@@ -14,6 +14,7 @@ type ZipEntry struct {
 }
 
 func newZipEntry(path string) *ZipEntry  {
+	log.Println("newZipEntry:" , path)
 	absDir, err := filepath.Abs(path)
 	if err != nil {
 		log.Panic(err)
@@ -21,7 +22,7 @@ func newZipEntry(path string) *ZipEntry  {
 	return &ZipEntry{absDir}
 }
 
-func (this *ZipEntry) readClass(className string)([]byte,Entry,error){
+func (this *ZipEntry) readClass(className string)([]byte, Entry,error){
 	r, err := zip.OpenReader(this.absDir)
 	if util.PanicError(err) {
 		return nil, nil, err

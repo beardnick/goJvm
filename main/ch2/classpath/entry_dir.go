@@ -11,6 +11,7 @@ type DirEntry struct {
 }
 
 func newDirEntry(path string)*DirEntry {
+	log.Println("newDirEntry:" , path)
 	absDir, err := filepath.Abs(path)
 	if err != nil {
 		log.Panic(err)
@@ -18,7 +19,7 @@ func newDirEntry(path string)*DirEntry {
 	return &DirEntry{absDir}
 }
 
-func (this *DirEntry) readClass(className string)([]byte,Entry,error){
+func (this *DirEntry) readClass(className string)([]byte, Entry,error){
 	fileName := filepath.Join(this.absDir, className)
 	data, err := ioutil.ReadFile(fileName)
 	return data, this, err

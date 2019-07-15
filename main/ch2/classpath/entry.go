@@ -1,6 +1,7 @@
 package classpath
 
 import (
+	"log"
 	"runtime"
 	"strings"
 )
@@ -12,17 +13,22 @@ type Entry interface {
 
 // #TODO 2019/7/15 write newEntry code
 func newEntry(path string)Entry {
+	log.Println("newEntry :", path)
 	// find a needle in a haystack
+	// path1:path2
 	if strings.Contains(path,getClassPathSeparator()){
 		return newCompositeEntry(path)
 	}
+	// path/*
 	if strings.HasSuffix(path, "*"){
 		return newWildcardEntry(path)
 	}
+	// class.zip
 	if strings.HasSuffix(path, ".jar") || strings.HasSuffix(path, ".jar") ||
 	strings.HasSuffix(path, ".jar") || strings.HasSuffix(path, ".jar"){
 		return newZipEntry(path)
 	}
+	// path
 	return newDirEntry(path)
 
 }
