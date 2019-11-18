@@ -43,55 +43,62 @@ func (self *ClassFile) Parse(classData []byte) (cf *ClassFile, err error) {
 // 下列方法只要出错就panic，所以就不返回error了
 
 func (self *ClassFile) read(reader *ClassReader) {
-	self.magic = self.readAndCheckMagic(reader)
-	self.minorVersion, self.majorVersion = self.readAndCheckVersion(reader)
-	self.constantPool = self.readConstantPool(reader)
-	self.accessFlag = reader.readUint16()
-	self.thisClass = reader.readUint16()
-	self.superClass = reader.readUint16()
-	self.interfaces = reader.readUint16s()
-	self.fileds =
+	self.magic = self.ReadAndCheckMagic(reader)
+	self.minorVersion, self.majorVersion = self.ReadAndCheckVersion(reader)
+	self.constantPool = self.ReadConstantPool(reader)
+	self.accessFlag = reader.ReadUint16()
+	self.thisClass = reader.ReadUint16()
+	self.superClass = reader.ReadUint16()
+	self.interfaces = reader.ReadUint16s()
+	//self.fileds =
 }
 
-func (self *ClassFile) readAndCheckMagic(reader *ClassReader) (magic uint32) {
-	magic = reader.readUint32()
-	if magic != 0xCAFABABE {
+func (self *ClassFile) ReadAndCheckMagic(reader *ClassReader) (magic uint32) {
+	magic = reader.ReadUint32()
+	if magic != 0xCAFEBABE {
 		panic("java.lang.ClassFormatError: magic !")
-		return 0
 	}
 	return
 }
 
-func (self *ClassFile) readAndCheckVersion(reader *ClassReader) (minor, major uint16) {
-	minor = reader.readUint16()
-	major = reader.readUint16()
+func (self *ClassFile) ReadAndCheckVersion(reader *ClassReader) (minor, major uint16) {
+	minor = reader.ReadUint16()
+	major = reader.ReadUint16()
 	switch major {
 	case 45:
 		return
 	case 46, 47, 48, 49, 50, 51, 52:
-		if major == 0 {
+		if minor == 0 {
 			return
 		}
 	}
 	panic(fmt.Sprintln("java.lang.UnSupportedClassVersionError!  : ", " major : ", major, " minor: ", minor))
 }
 
-func (self *ClassFile) readConstantPool(reader *ClassReader) uint16 {
-
+func (self *ClassFile) ReadConstantPool(reader *ClassReader) ConstantPool {
+	return ReadConstantPool(reader)
 }
 
-func (self *ClassFile) readMemberInfo(reader *ClassReader) []*MemberInfo {
+//func (self *ClassFile) readMemberInfo(reader *ClassReader) []*MemberInfo {
 
-}
+//}
 
-func (self *ClassFile) readFields(reader *ClassReader) []*MemberInfo {
+//func (self *ClassFile) readFields(reader *ClassReader) []*MemberInfo {
 
-}
+//}
 
-func (self *ClassFile) readMethods(reader *ClassReader) []*MemberInfo {
+//func (self *ClassFile) readMethods(reader *ClassReader) []*MemberInfo {
 
-}
+//}
 
-func (self *ClassFile) readAttributes(reader *ClassReader) []*AttributeInfo {
+//func (self *ClassFile) readAttributes(reader *ClassReader) []*AttributeInfo {
 
+//}
+
+func (self *ClassFile) PrintClassInfo() {
+	fmt.Printf("majorVersion:%v\n", self.majorVersion)
+	fmt.Printf("thisClass:%v\n", self.constantPool.GetIndex(self.thisClass))
+	fmt.Printf("superClass:%v\n", self.constantPool.GetIndex(self.superClass))
+	//fmt.Printf("interfaces:%v\n", self.constantPool.GetIndex(self.interfaces))
+	fmt.Printf("interfaces:%v\n", self.interfaces)
 }

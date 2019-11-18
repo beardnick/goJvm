@@ -3,7 +3,6 @@ package classpath
 import (
 	"goJvm/main/util"
 	"io/ioutil"
-	"log"
 	"path/filepath"
 	"strings"
 )
@@ -11,27 +10,27 @@ import (
 //type WildcardEntry []Entry
 
 func newWildcardEntry(path string) CompositeEntry {
-	log.Println("newWildcardEntry:" , path)
+	//log.Println("newWildcardEntry:" , path)
 	wildcardEntry := []Entry{}
-	if strings.Index(path, "*") != -1{
-		path = strings.TrimSuffix(path,  "*")
+	if strings.Index(path, "*") != -1 {
+		path = strings.TrimSuffix(path, "*")
 	}
 	path, _ = filepath.Abs(path)
 	dir, err := ioutil.ReadDir(path)
-	if util.PanicError(err){
+	if util.PanicError(err) {
 		return nil
 	}
-	for _, fileInfo := range dir{
-		validSuffixes := [...]string{".class", ".zip", ".jar", ".JAR",".ZIP"}
+	for _, fileInfo := range dir {
+		validSuffixes := [...]string{".class", ".zip", ".jar", ".JAR", ".ZIP"}
 		ok := false
 		for _, suffix := range validSuffixes {
-			if strings.HasSuffix(fileInfo.Name(),suffix){
+			if strings.HasSuffix(fileInfo.Name(), suffix) {
 				ok = true
 				break
 			}
 		}
 		if ok {
-			wildcardEntry = append(wildcardEntry, newEntry(filepath.Join(path , fileInfo.Name())))
+			wildcardEntry = append(wildcardEntry, newEntry(filepath.Join(path, fileInfo.Name())))
 		}
 	}
 	return wildcardEntry

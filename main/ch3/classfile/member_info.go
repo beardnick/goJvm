@@ -9,21 +9,21 @@ type MemberInfo struct {
 	attributes      []AttributeInfo // 属性表
 }
 
-func (self *MemberInfo) readMember(reader *ClassReader, cp ConstantPool) *MemberInfo {
-	return &MemberInfo{
-		cp:              cp,
-		accessFlags:     reader.readUint16(),
-		nameIndex:       reader.readUint16(),
-		descriptorIndex: reader.readUint16(),
-		attributes:      readAttributes(reader, cp),
-	}
-}
+//func (self *MemberInfo) readMember(reader *ClassReader, cp ConstantPool) *MemberInfo {
+//return &MemberInfo{
+//cp:              cp,
+//accessFlags:     reader.readUint16(),
+//nameIndex:       reader.readUint16(),
+//descriptorIndex: reader.readUint16(),
+//attributes:      readAttributes(reader, cp),
+//}
+//}
 
-func (self *MemberInfo) readMembers(reader *ClassReader, cp ConstantPool) []*MemberInfo {
-	length := reader.readUint16()
-	members := make([]*MemberInfo, length)
-	for i := range members {
-		members[i] = self.readMember(reader, cp)
-	}
-	return members
-}
+//func (self *MemberInfo) readMembers(reader *ClassReader, cp ConstantPool) []*MemberInfo {
+//length := reader.readUint16()
+//members := make([]*MemberInfo, length)
+//for i := range members {
+//members[i] = self.readMember(reader, cp)
+//}
+//return members
+//}
