@@ -9,6 +9,14 @@ func ReadConstantInfo(reader *ClassReader, cp ConstantPool) ConstantInfo {
 	return c
 }
 
+func (self ConstantPool) GetIndexs(indexs []uint16) []ConstantInfo {
+	infos := make([]ConstantInfo, len(indexs))
+	for i, v := range indexs {
+		infos[i] = self.GetIndex(v)
+	}
+	return infos
+}
+
 func (self ConstantPool) GetIndex(index uint16) ConstantInfo {
 	if int(index) > len(self) {
 		panic("no such constant")
@@ -30,4 +38,19 @@ func ReadConstantPool(reader *ClassReader) ConstantPool {
 		}
 	}
 	return cp
+}
+
+func (self ConstantPool) getContantStrings(indexs []uint16) []string {
+	results := make([]string, len(indexs))
+	for i, k := range indexs {
+		results[i] = self.getContantString(k)
+	}
+	return results
+}
+
+func (self ConstantPool) getContantString(index uint16) string {
+	if utf8Info, ok := self.GetIndex(index).(*ConstantUtf8Info); ok {
+		return utf8Info.str
+	}
+	return ""
 }

@@ -100,5 +100,5 @@ func (self *ClassFile) PrintClassInfo() {
 	fmt.Printf("thisClass:%v\n", self.constantPool.GetIndex(self.thisClass))
 	fmt.Printf("superClass:%v\n", self.constantPool.GetIndex(self.superClass))
 	//fmt.Printf("interfaces:%v\n", self.constantPool.GetIndex(self.interfaces))
-	fmt.Printf("interfaces:%v\n", self.interfaces)
+	fmt.Printf("interfaces:%v\n", self.constantPool.GetIndexs(self.interfaces))
 }

@@ -113,62 +113,62 @@ func (self *ConstantUtf8Info) readInfo(reader *ClassReader) {
 
 // 指向ConstantUtf8Info的一个索引
 type ConstantStringInfo struct {
-	strindex uint16
-	cp       ConstantPool
-}
-
-func (self *ConstantStringInfo) readInfo(reader *ClassReader) {
-	self.strindex = reader.ReadUint16()
-}
-
-func (self *ConstantStringInfo) String() string {
-	return getCpString(self.cp, self.strindex)
-}
-
-type ConstantClassInfo struct {
-	nameindex uint16
+	str_index uint16
 	cp        ConstantPool
 }
 
+func (self *ConstantStringInfo) readInfo(reader *ClassReader) {
+	self.str_index = reader.ReadUint16()
+}
+
+func (self *ConstantStringInfo) String() string {
+	return self.cp.getContantString(self.str_index)
+}
+
+type ConstantClassInfo struct {
+	name_index uint16
+	cp         ConstantPool
+}
+
 func (self *ConstantClassInfo) readInfo(reader *ClassReader) {
-	self.nameindex = reader.ReadUint16()
+	self.name_index = reader.ReadUint16()
 }
 
 func (self *ConstantClassInfo) String() string {
-	return getCpString(self.cp, self.nameindex)
+	return self.cp.getContantString(self.name_index)
 }
 
 type ConstantNameAndTypeInfo struct {
-	nameindex uint16
-	descindex uint16
+	name_index uint16
+	desc_index uint16
 }
 
 func (self *ConstantNameAndTypeInfo) readInfo(reader *ClassReader) {
-	self.nameindex = reader.ReadUint16()
-	self.descindex = reader.ReadUint16()
+	self.name_index = reader.ReadUint16()
+	self.desc_index = reader.ReadUint16()
 }
 
 type ConstantMemberrefInfo struct {
-	cp               ConstantPool
-	classindex       uint16
-	nameAndTypeIndex uint16
+	cp              ConstantPool
+	class_index     uint16
+	name_type_index uint16
 }
 
 func (self *ConstantMemberrefInfo) readInfo(reader *ClassReader) {
-	self.classindex = reader.ReadUint16()
-	self.nameAndTypeIndex = reader.ReadUint16()
+	self.class_index = reader.ReadUint16()
+	self.name_type_index = reader.ReadUint16()
 }
 
 func (self *ConstantMemberrefInfo) ClassName() string {
-	if classInfo, ok := self.cp.GetIndex(self.classindex).(*ConstantClassInfo); ok {
-		return getCpString(self.cp, classInfo.nameindex)
+	if classInfo, ok := self.cp.GetIndex(self.class_index).(*ConstantClassInfo); ok {
+		return self.cp.getContantString(classInfo.name_index)
 	}
 	return ""
 }
 
 func (self *ConstantMemberrefInfo) NameAndDescriptor() (name, desc string) {
-	if nameAndTypeInfo, ok := self.cp.GetIndex(self.nameAndTypeIndex).(*ConstantNameAndTypeInfo); ok {
-		return getCpString(self.cp, nameAndTypeInfo.nameindex), getCpString(self.cp, nameAndTypeInfo.descindex)
+	if nameAndTypeInfo, ok := self.cp.GetIndex(self.name_type_index).(*ConstantNameAndTypeInfo); ok {
+		return self.cp.getContantString(nameAndTypeInfo.name_index), self.cp.getContantString(nameAndTypeInfo.desc_index)
 	}
 	return "", ""
 }
@@ -211,10 +211,3 @@ type ConstantInvokeDynamicInfo struct{}
 func (self *ConstantMethodHandleInfo) readInfo(reader *ClassReader) {}
 
 func (self *ConstantInvokeDynamicInfo) readInfo(reader *ClassReader) {}
-
-func getCpString(cp ConstantPool, index uint16) string {
-	if utf8Info, ok := cp.GetIndex(index).(*ConstantUtf8Info); ok {
-		return utf8Info.str
-	}
-	return ""
-}
